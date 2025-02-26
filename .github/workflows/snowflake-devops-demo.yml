@@ -48,7 +48,7 @@ jobs:
           SF_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
           SF_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
           SF_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
-          SF_PRIVATE_KEY_PATH: "/tmp/snowflake_private_key.p8"
+          SNOWFLAKE_PRIVATE_KEY_PATH: "/tmp/snowflake_private_key.p8"
           SNOWFLAKE_AUTHENTICATOR: "snowflake"
         run: |
           echo "Verifying environment variables"
