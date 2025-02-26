@@ -31,7 +31,7 @@ jobs:
       - name: Decode and Prepare RSA Private Key
         run: |
           echo "Decoding Private Key"
-          echo "${{ secrets.SNOWFLAKE_PRIVATE_KEY_RAW }}" | base64 --decode > /tmp/snowflake_private_key.p8
+          echo "${{ secrets.SNOWFLAKE_PRIVATE_KEY_CONTENT }}" | base64 --decode > /tmp/snowflake_private_key.p8
           chmod 600 /tmp/snowflake_private_key.p8
           echo "Private key stored at /tmp/snowflake_private_key.p8"
 
@@ -49,12 +49,10 @@ jobs:
           SF_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
           SF_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
           SF_PRIVATE_KEY_PATH: "/tmp/snowflake_private_key.p8"
-          SF_PRIVATE_KEY_PASSPHRASE: ${{ secrets.PASSPHARSE }}
         run: |
-          echo "Step 1: Running schemachange"
+          echo "Running schemachange"
           schemachange -f $GITHUB_WORKSPACE/migrations \
             -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE \
             -w $SF_WAREHOUSE -d $SF_DATABASE \
             --private-key-path $SF_PRIVATE_KEY_PATH \
-            --private-key-passphrase "$SF_PRIVATE_KEY_PASSPHRASE" \
             -c $SF_DATABASE.SCHEMACHANGE.CHANGE_HISTORY --create-change-history-table
