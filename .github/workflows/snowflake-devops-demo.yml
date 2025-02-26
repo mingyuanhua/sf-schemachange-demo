@@ -1,12 +1,12 @@
 name: snowflake-devops-demo
 
-# Controls when the action will run. 
+# Controls when the action will run.
 on:
   push:
     branches:
       - main
     paths:
-      - 'migrations/**'
+      - "migrations/**"
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -25,13 +25,9 @@ jobs:
         uses: actions/setup-python@v2.2.1
         with:
           python-version: 3.8.x
-      
+
       # creating a dynamic file in from the private key stored in git secret
       # and providing access only to owner so chmod 600
-      - name: Decrypt RSA key
-        run: |
-          echo "${{ secrets.SNOWFLAKE_PRIVATE_KEY_RAW }}"  > ./config/rsa_key.p8
-          chmod 600 ./config/rsa_key.p8 
 
       # setting environment variable by using all the secrets
       - name: Run schemachange
@@ -48,6 +44,8 @@ jobs:
           python --version
           echo "Step 1: Installing schemachange"
           pip install schemachange==3.7.0
-          
+          echo "${{ secrets.SNOWFLAKE_PRIVATE_KEY_RAW }}"  > ./config/rsa_key.p8
+          chmod 600 ./config/rsa_key.p8
+
           echo "Step 2: Running schemachange"
           schemachange -f $GITHUB_WORKSPACE/migrations -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE -w $SF_WAREHOUSE -d $SF_DATABASE -c $SF_DATABASE.SCHEMACHANGE.CHANGE_HISTORY --create-change-history-table
