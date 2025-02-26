@@ -49,9 +49,11 @@ jobs:
           SF_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
           SF_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
           SF_PRIVATE_KEY_PATH: "/tmp/snowflake_private_key.p8"
+          SNOWFLAKE_AUTHENTICATOR: "snowflake"
         run: |
-          echo "Running schemachange"
-          ls -l $SF_PRIVATE_KEY_PATH
+          echo "Verifying environment variables"
+          env | grep SNOWFLAKE
+
           schemachange -f $GITHUB_WORKSPACE/migrations \
             -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE \
             -w $SF_WAREHOUSE -d $SF_DATABASE \
